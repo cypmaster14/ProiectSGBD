@@ -1,0 +1,26 @@
+User
+->logare
+->inregistrare
+->schimbare parola
+->cautare produse
+->obtinere ingrediente pt un produs
+->plasare comentariu
+->votare produs
+->recomandare produs
+
+?Pornirea unei campanii
+?
+
+
+
+Administrator
+->stergere utilizator
+->stergere produs
+->adaugare produs
+->actualizare produs
+
+
+
+Paginare rezultate 
+
+
