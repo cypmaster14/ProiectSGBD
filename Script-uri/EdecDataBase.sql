@@ -11,11 +11,11 @@ category_name varchar2(60) not null);
 create table Product
 (barcode varchar2(20) primary key CHECK (LENGTH(TRIM(TRANSLATE(barcode, '0123456789', ' '))) < 0),
 product_Name varchar2(200) not null,
-weight varchar2(6) not null,
+quantity varchar2(6) not null,
 price varchar2(20),
 rating number(5,2),
 image varchar2(90),
-keywords varchar2(2000) not null,
+keywords varchar2(4000) not null,
 category_id integer references EdecCategory(category_id) on delete cascade);
 /
 create table Ingredient
