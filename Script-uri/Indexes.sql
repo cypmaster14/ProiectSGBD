@@ -7,3 +7,4 @@ end;
 create index raiting_index on Product(rating);
 /
 create index email_pass on EdecUser(email_address,password);
+/
