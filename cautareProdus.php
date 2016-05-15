@@ -18,7 +18,7 @@
 			      (SERVICE_NAME = XE)
 			    )
 			  )";
-		$conn = oci_connect("STUDENT", "STUDENT",$aux) or die;
+		$conn = oci_connect("EDEC", "edec","localhost/XE") or die;
 		
 
 		$sql="declare
@@ -48,10 +48,6 @@
 			}
 			echo "</ul>";
 		}
-
-		
-
-
 	}
 
 ?>

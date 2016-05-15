@@ -36,7 +36,7 @@ PRIMARY KEY (campaing_id, email_address));
 create table Product_Ingredient
 (ingredient_id integer references Ingredient(ingredient_id) on delete cascade,
 barcode varchar2(20) references Product(barcode) on delete cascade,
-PRIMARY KEY (ingredient_id, barcode));
+PRIMARY KEY (barcode,ingredient_id));
 /
 create table Review
 (email_address varchar2(40) references EdecUser(email_address) on delete cascade,

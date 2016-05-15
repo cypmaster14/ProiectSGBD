@@ -8,3 +8,4 @@ create index raiting_index on Product(rating);
 /
 create index email_pass on EdecUser(email_address,password);
 /
+create index product_name_index on Product(lower(product_name));
