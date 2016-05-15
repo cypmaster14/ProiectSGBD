@@ -21,7 +21,7 @@
 			session_start();
 			$_SESSION=array_merge($_SESSION,$_POST);
             session_write_close();
-			header("Location: http://localhost/SGBD/productFound.php");
+			header("Location: http://localhost/SGBD_Claudiu/productFound.php");
 		}
 		else{
 			echo "Acest produs nu exista in baza de date!";

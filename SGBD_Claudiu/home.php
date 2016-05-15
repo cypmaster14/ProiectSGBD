@@ -2,7 +2,7 @@
     session_start();
 	$connect = oci_pconnect("STUDENT", "STUDENT", "//localhost/XE:pooled");
 	if($connect){
-		echo "<h1>Bine ati venit!</h1>";
+		echo "<h1>Bine ati venit!</h1> ";
 	}
 	else{
 		echo "conexiune nereusita";
@@ -29,10 +29,10 @@
 			$_SESSION['parola']=$_POST['parola'];
 			$_SESSION['grad']=$_POST['grad'];
 			if($_POST['grad']=="user"){
-				header("Location: http://localhost/SGBD/loggedUser.php");
+				header("Location: http://localhost/SGBD_Claudiu/loggedUser.php");
 			}
 			else{
-				header("Location: http://localhost/SGBD/loggedAdministrator.php");
+				header("Location: http://localhost/SGBD_Claudiu/loggedAdministrator.php");
 			}
 		}
 		else{
