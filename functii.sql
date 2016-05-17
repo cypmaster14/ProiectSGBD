@@ -118,7 +118,7 @@ END;
 create or replace function getCategory (p_categorie EdecCategory.category_name%type) return number is
 	v_id EdecCategory.category_name%type;
 BEGin
-	select category_id into v_id from EdecCategory where category_name=p_categorie;
+	select category_id into v_id from EdecCategory where category_name like p_categorie||'%';
 	return v_id;
  END;
 
@@ -143,7 +143,6 @@ END;
 ----Exportul CSV
 
 create or replace procedure exportCSV is
-
 	type cursor_type is ref cursor;
 	c cursor_type;
 	d cursor_type;
@@ -158,13 +157,12 @@ create or replace procedure exportCSV is
 	comanda varchar2(10000);
 	select_stmt varchar2(1000);
 	file_id UTL_FILE.FILE_TYPE;
-	--select object_name ,object_type from user_objects where object_type in ('TABLE') and object_name in (upper('EdecUser'),upper('EdecCategory'),upper('Product'),upper('Ingredient'),upper('Campaing'),upper('EdecUser_Campaing'),upper('Product_Ingredient'),upper('Review'))
-	select object_name ,object_type from user_objects where object_type in ('TABLE') and object_name in (upper('Product'))
+	--select object_name ,object_type from user_objects where object_type in ('TABLE') and object_name in (upper('Product'))
 
 Begin
 	select user into username from dual;
-	for v_i in (select object_name ,object_type from user_objects where object_type in ('TABLE') and object_name in (upper('Product'))) LOOP
-		file_id:=UTL_FILE.FOPEN('WORKSPACE',v_i.object_name||'.csv','W');
+	for v_i in (select object_name ,object_type from user_objects where object_type in ('TABLE') and object_name in (upper('EdecUser'),upper('EdecCategory'),upper('Ingredient'),upper('Campaing'),upper('EdecUser_Campaing'),upper('Product_Ingredient'),upper('Review'))) LOOP
+		file_id:=UTL_FILE.FOPEN('WORKSPACE',v_i.object_name||'42.csv','W');
 		select column_name BULK COLLECT into v_columns from all_tab_columns
 		where table_name=upper(v_i.object_name);
 		stmt:='select';
@@ -172,22 +170,22 @@ Begin
 			stmt:=stmt||''''''||'||'|| v_columns(v_j)||'||'||'''''' ||'||'',''||';
 		END LOOP;
 		stmt:=substr(stmt,1,length(stmt)-7);
-      	stmt:=stmt||' from '||v_i.object_name;
-      	dbms_output.put_line(stmt);
-      	insertStmt:='';
-      	open d for stmt;      	
+    stmt:=stmt||' from '||v_i.object_name;
+    open d for stmt;   
+    insertStmt:='';
       	LOOP
       		fetch d into rezultat;
-      		exit when d%NOTFOUND;      		
-      		insertStmt:=insertStmt||rezultat;
+      		exit when d%NOTFOUND;          
+      		insertStmt:=insertStmt||rezultat;         
       		UTL_FILE.PUT(file_id,insertStmt);
       		UTL_FILE.NEW_LINE(file_id,1);
-      		dbms_output.put_line('Am pus in fisier:'+insertStmt);
-      		insertStmt:='';
+      		dbms_output.put_line('Am pus in fisier:');
+          insertStmt:='';
       	END LOOP;
       	UTL_FILE.FCLOSE(file_id);
 	END LOOP;
 END;
+
 
 
 Declare
@@ -200,9 +198,33 @@ END;
 
 create or replace procedure importCSV is
 
+	type cursor_type is ref cursor;
+	c_i cursor_type;
+	v_id EdecCategory.category_id%type;
+	v_name EdecCategory.category_name%type;
+	v_statement varchar2(2000);
 
 Begin
+	execute immediate 'create table xter_category(
+						category_id number(38),
+						category_name varchar2(60)
+						) 
+						organization external
+						(
+							default directory WORKSPACE
+							access parameters
+							(records delimited by newline fields terminated by '','')
+							location (''EDECCATEGORY42.csv'')
+						)';
 
+	open c_i for 'select * from xter_category';
+	loop
+		fetch c_i into v_id,v_name;
+		exit when c_i%NOTFOUND;
+		v_statement:='insert into EdecCategory values (:id,:name)';
+		execute immediate v_statement using v_id,v_name;
+	END LOOP;
+	execute immediate 'drop table xter_category';
 END;
 
 
